@@ -17,7 +17,7 @@ from matplotlib import pyplot as plt
 # Так вы сможете проверить себя.
 
 # Ниже заданы "константы", с которыми можно "поиграть" - поварьировать их и посмотреть, что будет.
-HIDDEN_LAYER_SIZE = 64  # Количество нейронов в скрытом слое.
+HIDDEN_LAYER_SIZE = 36  # Количество нейронов в скрытом слое.
 
 # Всего у вас есть 60 000 изображений, поэтому сумма следующих двух констант не должна быть больше 60 000.
 SAMPLES_TO_TRAIN = 1000  # Количество примеров в обучающей выборка, на ней будет производить подбор параметров модели.
@@ -157,13 +157,8 @@ def compute_cost_grad(X, y, theta, lamb):
     Y = np.array([one_hot_encode(i) for i in y])
 
     d3 = H - Y
-
-    # Native
-    # d2 = np.array([(Theta2.T @ d3[i]) * logistic_grad(add_fictive(Z2)[i]) for i in range(d3.shape[0])])[ : , 1:]
-
-    # Tested
+    
     d2 = ((Theta2.T @ d3.T) * logistic_grad(add_fictive(Z2).T)).T[ : , 1:]
-
     
     d1 = (X.T @ d2).T
     d1 = np.column_stack((d1[ :, 0 ], d1[ :, 1: ] + lamb * Theta1[ :, 1: ]))
@@ -221,7 +216,7 @@ for i in range(100):
 plt.pcolor(hm, cmap='Greys')
 plt.show()
 
-lamb = 0.15  # можно поварьировать параметр регуляризации и посмотреть, что будет
+lamb = 0.2  # можно поварьировать параметр регуляризации и посмотреть, что будет
 
 init_Theta1 = np.random.uniform(-0.12, 0.12, (HIDDEN_LAYER_SIZE, X.shape[1] + 1))
 init_Theta2 = np.random.uniform(-0.12, 0.12, (10, HIDDEN_LAYER_SIZE + 1))
