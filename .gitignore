@@ -2,3 +2,7 @@
 *.docx
 *.pptx
 *.mp4
+*.idx
+.DS_Store
+/5/result.png
+**data/
