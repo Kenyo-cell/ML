@@ -40,6 +40,22 @@ def pca(X, k):
 
     # ВАШ КОД ЗДЕСЬ
 
+    X = np.array([X[:, i] - np.mean(X[:, i]) for i in range(n)])
+
+    cov_matrix = np.cov(X)
+
+    eig_val, eig_vec = np.linalg.eig(cov_matrix)
+    indicies = eig_val.argsort()[::-1] # получаем индексы отсортированных по убыванию собственных значений
+
+    biggest_eig_val = eig_val[indicies]
+    biggest_eig_vec = eig_vec[ :, indicies]
+
+    k_eig_val = biggest_eig_val[:k]
+    k_eig_vec = biggest_eig_vec[ :, :k ]
+
+    U = k_eig_vec
+    saved_disp = np.sum(k_eig_val) / np.sum(eig_val)
+
     # =============
 
     return U, saved_disp
@@ -51,13 +67,7 @@ def project_data(X, U):
     # Принимает матрицу данных X и матрицу U, задающую базис пространства.
     # Должна возвращать новую матрицу данных, где все точки спроецированны в заданное пространство.
 
-    Xp = np.zeros((X.shape[0], U.shape[1]))  # результат, надо заполнить
-
-    # ВАШ КОД ЗДЕСЬ
-
-    # =============
-
-    return Xp
+    return X @ U
 
 
 def recover_data(Xp, U):
@@ -67,13 +77,7 @@ def recover_data(Xp, U):
     # Должна возвращать новую матрицу данных, где все точки спроецированны из заданного пространства,
     # в пространство с базисом ijk.
 
-    X_rec = np.zeros((Xp.shape[0], U.shape[0]))  # результат, надо заполнить
-
-    # ВАШ КОД ЗДЕСЬ
-
-    # =============
-
-    return X_rec
+    return Xp @ U.T
 
 
 X = load_data('faces.txt')

@@ -23,7 +23,7 @@ def init_centroids(data, k):
     # Должна вернуть список начальных положений центроидов. Предлагается выбрать случайно k объектов из data и
     # поставить в их положения центроиды.
 
-    return random.sample(data, k) # список положений (кортежей) центроидов, нужно заполнить.
+    return random.sample(data, k)
 
 
 def find_closest_centroid(value, centroids):
@@ -33,15 +33,15 @@ def find_closest_centroid(value, centroids):
     # Должна вернуть индекс ближайшего центроида в списке centroids.
 
     # ВАШ КОД ЗДЕСЬ
-    
+
     x = 0
     y = 1
 
-    distance = [ abs((centroid[x] - value[x]) ** 2  + (centroid[y] - value[y]) ** 2) ** 0.5 for centroid in centroids ]
+    dist = [ abs((centroid[x] - value[x]) ** 2 + (centroid[y] - value[y]) ** 2) ** 0.5 for centroid in centroids ]
 
     # =============
 
-    return distance.index(min(distance)) # индекс ближайшего центроида из списка центроидов, нужно посчитать.
+    return dist.index(min(dist)) # индекс ближайшего центроида из списка центроидов, нужно посчитать.
 
 
 def compute_cluster_center(cluster_data):
@@ -53,10 +53,8 @@ def compute_cluster_center(cluster_data):
     result = [0] * len(cluster_data[0])  # центр кластера в виде списка, его нужно заполнить
 
     # ВАШ КОД ЗДЕСЬ
-
-    # result = [sum(cluster_data[:][cluster_index]) / len(cluster_data) for cluster_index in range(len(cluster_data[0]))]
-    result = [ sum(list(map(itemgetter(i), cluster_data))) / len(cluster_data) for i in range(len(cluster_data[0])) ]
-    # result = [sum(list(map(itemgetter(1), cluster))) for cluster in cluster_data]
+    
+    result = [ sum(map(itemgetter(i), cluster_data)) / len(cluster_data) for i in range(len(cluster_data[0]))]
 
     # =============
 
@@ -84,18 +82,18 @@ def kmeans(data, k):
         # расчет центра совпал с текущим положением центроида для всех центроидов.
 
         # ВАШ КОД ЗДЕСЬ
-        moved_centroids = 0
-
+        centroids_got = 0
         for cluster_index in range(len(clusters)):
-            cluster_center = compute_cluster_center(clusters[cluster_index])
-            if cluster_center in centroids:
-                moved_centroids += 1
+            center = compute_cluster_center(clusters[cluster_index])
+            if center in centroids:
+                centroids_got += 1
+
             else:
-                centroids[cluster_index] = cluster_center
+                centroids[cluster_index] = center
 
-
-        if moved_centroids == len(centroids):
+        if centroids_got == len(centroids):
             break
+
         # =============
 
     return clusters, centroids
@@ -128,7 +126,7 @@ data = [image_pixels[x, y] for x, y in product(range(image.size[0]), range(image
 
 # количество цветов, которе остается на результирующей картинке (можно поварьировать,
 # но от него сильно зависит время выполнения)
-clusters_num = 8
+clusters_num = 12
 
 print()
 print('Запуск алгоритма k-средних (может занять время..)')
@@ -144,3 +142,4 @@ for x, y in product(range(image.size[0]), range(image.size[1])):
 image.save('result.png')
 
 print('Успех! Результат в файле "result.png" (обратите внимаение на размер результата в килобайтах).')
+
